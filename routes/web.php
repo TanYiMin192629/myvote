@@ -26,6 +26,7 @@ Route::get('/voter', 'VoterController@index')->name('voter')->middleware('voter'
 Route::get('/candidate', 'CandidateController@index')->name('candidate')->middleware('candidate');
 Route::resource('profile','ProfileController');
 Route::resource('candidate_list','CandidateListController');
+Route::resource('voter_list','VoterListController');
 Route::resource('election','ElectionController');
 Route::resource('vote','VoteController');
 Route::resource('manifesto','ManifestoController');

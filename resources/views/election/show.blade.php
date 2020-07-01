@@ -132,6 +132,10 @@
         if (timeInterval<0){
             clearInterval(timer);
             document.getElementById('expired').innerText = "THE VOTING HAS EXPIRED";
+            document.getElementById('days').innerText = '-';
+            document.getElementById('hours').innerText = '-';
+            document.getElementById('minutes').innerText = '-';
+            document.getElementById('seconds').innerText = '-';
         }
     },1000);
 </script>

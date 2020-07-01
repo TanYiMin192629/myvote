@@ -45,7 +45,7 @@ class ElectionController extends Controller
             'election_title' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
-            'election_description' => '',
+            'election_description' => 'required',
         ]);
 
         $candidates_id = User::whereIn('id', $request->election_candidate)->get();
