@@ -1,58 +1,59 @@
 @extends('layouts.main')
-
-@section('css')
-<style>
-    .countdown li {
-        display: inline-block;
-        font-size: 1.5em;
-        list-style-type: none;
-        padding: 1em;
-        text-transform: uppercase;
-    }
-
-    .countdown li span {
-        display: block;
-        font-size: 4.5rem;
-    }
-</style>
-@endsection
-
 @section('activity')
-<div class="card">
-    <h4 class="card-header text-center">
+<div class="card text-center">
+    <h4 class="card-header">
         {{$election->election_title}}
     </h4>
     <div class="card-body">
-        <div class="row">
-            <div class="col">
+        <div class="row justify-content-center">
+            <div class="col-8">
                 {!! $chart->container() !!}
                 {!! $chart->script() !!}
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <h5 class="card-title">Start Date and Time</h5>
+        <div class="row pt-2 justify-content-center">
+            <div class="col-sm-6 pt-2 pt-sm-0">
+                <h5 class="card-text">Start Date and Time</h5>
                 <p class="card-text">{{$election->start_date}}</p>
             </div>
-            <div class="col-sm-6">
-                <h5 class="card-title">End Date and Time</h5>
+            <div class="col-sm-6 pt-5 pt-sm-0">
+                <h5 class="card-text">End Date and Time</h5>
                 <p class="card-text">{{$election->end_date}}</p>
             </div>
         </div>
-        <br>
-        <div class="my-4">
-            <h5 class="card-title">Description</h5>
+        <hr>
+        <div class="row pt-2 justify-content-md-center">
+
+            <div class="col-sm-4">
+                <h5 class="card-text">Time Remaining</h5>
+                <div class="container text-center countdowntimer">
+                    <li class="li"
+                        style="display: inline-block; list-style-type: none; padding: 0.5em; text-transform: uppercase;">
+                        <span id="expired" style="display: block;"></span></li>
+                    <ul>
+                        <li class="li"
+                            style="display: inline-block; list-style-type: none; padding: 0.5em; text-transform: uppercase;">
+                            <span id="days" style="display: block;"></span>days</li>
+                        <li class="li"
+                            style="display: inline-block; list-style-type: none; padding: 0.5em; text-transform: uppercase;">
+                            <span id="hours" style="display: block;"></span>Hours</li>
+                        <li class="li"
+                            style="display: inline-block; list-style-type: none; padding: 0.7em; text-transform: uppercase;">
+                            <span id="minutes" style="display: block;"></span>Minutes</li>
+                        <li class="li"
+                            style="display: inline-block; list-style-type: none; padding: 0.5em; text-transform: uppercase;">
+                            <span id="seconds" style="display: block;"></span>Seconds</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+        <div class="py-4">
+            <h5 class="card-text">Description</h5>
             <p class="card-text">{{$election->election_description}}</p>
         </div>
-        <div class="container text-center countdown">
-            <ul>
-                <li class="li"><span id="expired"></span></li>
-                <li class="li"><span id="days"></span>days</li>
-                <li class="li"><span id="hours"></span>Hours</li>
-                <li class="li"><span id="minutes"></span>Minutes</li>
-                <li class="li"><span id="seconds"></span>Seconds</li>
-            </ul>
-        </div>
+        <hr>
         <table class="table">
             <thead>
                 <tr>
@@ -66,9 +67,12 @@
                 <tr>
                     <td>{{$candidate->name}}</td>
                     <td>{{$vote_data->where('user_id', $candidate->id)->count()}}</td>
+                    @if (!$vote_data->contains('votedByID', Auth::user()->id))
                     <td><button type="button" class="btn btn-primary" id="vote_confirmation"
                             data-id="{{$candidate->id}}" data-name="{{$candidate->name}}" data-toggle="modal"
-                            data-target="#vote_candidate">Vote</button></td>
+                            data-target="#vote_candidate">Vote</button>
+                    </td>
+                    @endif
                 </tr>
                 @endforeach
             </tbody>
@@ -103,8 +107,9 @@
         </div>
     </div>
 </div>
+{{-- @endsection
 
-@section('javascript')
+@section('javascript') --}}
 <script defer>
     $(document).on("click", "#vote_confirmation", function () {
         let candidate_id = $(this).data('id');
@@ -112,23 +117,23 @@
         $(".modal-body #candidate_name").text( candidate_name );
         $(".modal-footer #candidate_id").val( candidate_id );
     });
-    
+
     const second = 1000;
     const minute = second * 60;
     const hour = minute * 60;
     const day = hour * 24;
-    
+
     let countDownDateTime = {{ strtotime("$election->end_date") }} * 1000;
-    
+
     let timer = setInterval(function(){
         let now = new Date().getTime();
         let timeInterval = countDownDateTime - now;
-        
+
         document.getElementById('days').innerText = Math.floor(timeInterval / day);
         document.getElementById('hours').innerText = Math.floor((timeInterval % day) / hour);
         document.getElementById('minutes').innerText = Math.floor((timeInterval % hour) / minute);
         document.getElementById('seconds').innerText = Math.floor((timeInterval % minute) / second);
-        
+
         if (timeInterval<0){
             clearInterval(timer);
             document.getElementById('expired').innerText = "THE VOTING HAS EXPIRED";
@@ -136,9 +141,8 @@
             document.getElementById('hours').innerText = '-';
             document.getElementById('minutes').innerText = '-';
             document.getElementById('seconds').innerText = '-';
+            document.getElementById('vote_confirmation').remove();
         }
     },1000);
 </script>
-@endsection
-
 @endsection

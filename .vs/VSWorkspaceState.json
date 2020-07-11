@@ -1,6 +1,7 @@
 {
   "ExpandedNodes": [
     "",
+<<<<<<< Updated upstream
     "\\app",
     "\\app\\Http",
     "\\app\\Http\\Controllers",
@@ -12,5 +13,11 @@
     "\\resources\\views\\layouts"
   ],
   "SelectedNode": "\\resources\\views\\election\\index.blade.php",
+=======
+    "\\database",
+    "\\database\\seeds"
+  ],
+  "SelectedNode": "\\.env.example",
+>>>>>>> Stashed changes
   "PreviewInSolutionExplorer": false
 }

@@ -1,6 +1,4 @@
 @extends('layouts.main')
-
-
 @section('activity')
 <div class="container">
     <div class="row justify-content-center">
@@ -10,12 +8,16 @@
                     Election List
                 </div>
 
+
+
                 <div class="card-body">
                     {{-- Content --}}
+                    @can('create', App\Election::class)
                     <button type="button" class="btn btn-primary" data-toggle="modal"
                         data-target="#new_election_modal">Create New Election</button>
-
                     <hr>
+                    @endcan
+
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -24,15 +26,17 @@
                             </tr>
                         </thead>
                         <tbody>
-{{--                             <tr>
-                                <th scope="row">3</th>
-                                <td colspan="2">Larry the Bird</td>
-                                <td>@twitter</td>
-                            </tr> --}}
                             @foreach ($elections as $election)
                             <tr>
                                 <td>{{$election->election_title}}</td>
-                                <td><a href="{{route('election.show',['election' => $election])}}" class="btn btn-primary">Participate</a></td>
+                                <td><a href="{{route('election.show', $election->id)}}"
+                                        class="btn btn-primary">Participate</a>
+                                    @can('create', App\Election::class)
+                                    <a href="{{route('election.show', $election->id)}}" class="btn btn-info">Edit</a>
+                                    <a href="{{route('election.show', $election->id)}}"
+                                        class="btn btn-danger">Delete</a>
+                                    @endcan
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -118,17 +122,28 @@
                     </div>
                 </div>
             </div>
+
         </div>
 
         <script>
             $('#start_date').datetimepicker({
-                    format: 'YYYY-MM-DD HH:mm:ss'
-                });
-                $('#end_date').datetimepicker({
-                    format: 'YYYY-MM-DD HH:mm:ss'
-                });
+                format: 'YYYY-MM-DD HH:mm:ss'
+            });
+            $('#end_date').datetimepicker({
+                format: 'YYYY-MM-DD HH:mm:ss'
+            });
+        </script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+        </script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
         </script>
     </div>
 </div>
 </div>
+
 @endsection

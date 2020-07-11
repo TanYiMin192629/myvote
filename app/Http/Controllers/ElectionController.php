@@ -41,6 +41,7 @@ class ElectionController extends Controller
      */
     public function store(Request $request)
     {   
+        $this->authorize('create', Election::class);
         $data = request()->validate([
             'election_title' => 'required',
             'start_date' => 'required',
@@ -64,14 +65,14 @@ class ElectionController extends Controller
     public function show(Election $election)
     {
         $vote_data = DB::table('candidate_election')->join('votes', 'candidate_election.id', '=', 'votes.candidate_election_id')->where('candidate_election.election_id', $election->id)->get();
-        $candidates_names = $election->candidates->pluck('name')->values();
-        $vote_query = DB::table('candidate_election')->join('votes', 'candidate_election.id', '=', 'votes.candidate_election_id')->where('candidate_election.election_id', $election->id);
-        $data = $vote_query->select('candidate_election_id', DB::raw('count(*) as vote_counts'))->groupBy('candidate_election_id')->get();
-        $vote_counts = $data->pluck('vote_counts');
-
+        $candidates = $election->candidates;
         $chart = new ElectionResultChart;
-        $chart->labels($candidates_names);
-        $chart->dataset('My dataset', 'bar', $vote_counts);
+        $chart->title('Election Result');
+        $rand = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');
+        foreach ($candidates as $candidate) {
+            $color = '#'.$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)];
+            $chart->dataset($candidate->name, 'bar', [$vote_data->where('user_id', $candidate->id)->count()])->backgroundcolor($color);
+        }
         return view('election.show', compact('election','vote_data','chart'));
     }
 

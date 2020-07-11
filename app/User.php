@@ -39,4 +39,12 @@ class User extends Authenticatable
     public function elections(){
         return $this->belongsToMany(\App\Election::class,'candidate_election')->withTimestamps();
     }
+
+    public function getRoleAttribute($attribute){
+        return [
+            0 => 'Admin',
+            1 => 'Candidate',
+            2 => 'Voter',
+        ][$attribute];
+    }
 }

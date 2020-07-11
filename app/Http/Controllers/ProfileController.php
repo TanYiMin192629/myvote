@@ -84,11 +84,6 @@ class ProfileController extends Controller
             $user->update();
             return redirect()->back()->with('success','Password changed successfully!');
         }
-        //dd($data['old_password']);
-        //dd(Auth::user()->id);
-            //return redirect(route('profile.index'));
-        
-        //$user->update($data);
     }
 
     /**

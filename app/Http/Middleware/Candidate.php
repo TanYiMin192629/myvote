@@ -19,15 +19,15 @@ class Candidate
             return redirect()->route('login');
         }
 
-        if (Auth::user()->role == 0) {
+        if (Auth::user()->role == 'Admin') {
             return redirect()->route('admin');
         }
 
-        if (Auth::user()->role == 1) {
+        if (Auth::user()->role == 'Candidate') {
             return $next($request);
         }
 
-        if (Auth::user()->role == 2) {
+        if (Auth::user()->role == 'Voter') {
             return redirect()->route('voter');
         }
         //return $next($request);

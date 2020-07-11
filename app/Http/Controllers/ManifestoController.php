@@ -75,20 +75,10 @@ class ManifestoController extends Controller
     {
         $data = request()->validate([
             'manifesto'=> 'required',
-            'photo' => 'required',
         ]);
 
-        $originalImage= $request->file('photo');
-        $thumbnailImage = Image::make($originalImage);
-        $thumbnailPath = public_path().'/thumbnail/';
-        $originalPath = public_path().'/image/';
-        $thumbnailImage->save($originalPath.time().$originalImage->getClientOriginalName());
-        $thumbnailImage->resize(50,50);
-        $thumbnailImage->save($thumbnailPath.time().$originalImage->getClientOriginalName());
-
-        $user = Auth::user();            
+        $user = Auth::user();
         $user->manifesto = $data['manifesto'];
-        $user->image = time().$originalImage->getClientOriginalName();
         $user->update();
         return redirect()->back();
     }

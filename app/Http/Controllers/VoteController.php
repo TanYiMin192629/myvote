@@ -7,6 +7,7 @@ use App\Election;
 use App\User;
 use Illuminate\Http\Request;
 use DB;
+use Auth;
 
 class VoteController extends Controller
 {
@@ -41,6 +42,7 @@ class VoteController extends Controller
         $candidate_election = DB::table('candidate_election')->where('election_id', $request->election_id)->where('user_id', $request->candidate_id)->get()->first();
         $vote = new Vote();
         $vote->candidate_election_id = $candidate_election->id;
+        $vote->votedByID = Auth::user()->id;
         $vote->save();
         return redirect()->back();
     }
